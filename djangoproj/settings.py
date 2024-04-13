@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "frontend.apps.FrontendConfig",
     "rest_framework",
 ]
-
+AUTH_USER_MODEL="djapp.CustomUser"
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

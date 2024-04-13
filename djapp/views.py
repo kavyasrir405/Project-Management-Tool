@@ -1,8 +1,8 @@
 
 from django.shortcuts import render
 from rest_framework import generics,status
-from .serializers import roomSerializer,CreateRoomSerializer,EmailSerializer
-from .models import room,Email
+from .serializers import roomSerializer,CreateRoomSerializer,EmailSerializer,ProjectSerializer,LoginUserSerializer
+from .models import room,Email,Project,Team,CustomUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -67,7 +67,28 @@ class SendEmailView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CreateProjectView(APIView):
+    serializer_class = ProjectSerializer
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+           
+            projectname= serializer.validated_data.get('projectname')
+            team = Team.objects.create()
+            project = Project.objects.create(projectname=projectname,teamid = team)
+
+            project.save()
+
+
+            return Response({'project_id': project.projectid}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
         
+class LoginUserView(generics.CreateAPIView):
+    serializer_class = LoginUserSerializer
+    queryset= CustomUser.objects.all()
+
 
 

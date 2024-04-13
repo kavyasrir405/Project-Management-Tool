@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import room,Email
+from .models import room,Email,CustomUser,Project
 
 
 class roomSerializer(serializers.ModelSerializer ):
@@ -17,3 +17,13 @@ class EmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Email
         fields = '__all__'
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields=('projectname',)
+
+class LoginUserSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields =  ('username', 'email', 'password',  'first_name', 'last_name')
