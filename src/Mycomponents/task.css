@@ -1,0 +1,27 @@
+/* Task.css */
+.task-container {
+    border: 2px solid #f5f3f3;
+    padding: 10px;
+    width:70%;
+    margin-left: 150px;
+  }
+  
+  .task-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .task-item {
+    /* margin-bottom: 0px; */
+    display: flex;
+    align-items: center;
+  }
+  
+  .task-item p {
+    color: #777;
+    margin-right: 10px;
+  }
+  .task-item:not(:last-child) p {
+    margin-right: 5px; /* Reduced margin between two SCRUM{index} elements */
+  }
+  

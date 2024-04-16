@@ -1,0 +1,22 @@
+/* Sprint.css */
+
+.sprint {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 35px;
+    width: 300px;
+}
+
+.sprint h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.sprint p {
+    margin: 5px 0;
+    color: #666;
+}
