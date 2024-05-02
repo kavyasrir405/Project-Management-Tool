@@ -17,9 +17,10 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path,include
 
-from myapp.views import ReactViews
+from myapp.views import *
 
 urlpatterns = [
     
     path('',ReactViews.as_view()),
+     path('updatebacklog',updateBacklog.as_view()),
 ]

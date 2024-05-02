@@ -1,7 +1,15 @@
 from rest_framework import serializers
 from .models import *
 
-class ReactSerializer(serializers.ModelSerializer):
+class BacklogSerializer(serializers.ModelSerializer):
     class Meta:
-        model= React
-        fields= ('employee','department')
+        model= backlog
+        fields=  ('backlogName',)  
+class UpdateBacklogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= backlog
+        fields=  ('sprint',)
+class SprintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Sprint
+        fields=  '__all__'
