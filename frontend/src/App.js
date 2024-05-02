@@ -38,24 +38,32 @@ import { useState } from 'react';
 import './App.css';
 import Header from './Mycomponents/Header.js'
 import Nav from './Mycomponents/Nav.js'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Board from './Mycomponents/board.js'
 
 
 
 
 
 function App() {
+  
+  
 
   const [items,setItem]=useState([])
   function updateItems(newitem){
     setItem((previtem)=>[...previtem,newitem])
   }
   return (
+    
     <div className="App">
-       <Header /> 
-      <Nav func={updateItems}/>
+      <Header />
+      <Nav func={updateItems} />
       
+      <div className="Content">
       
+      </div>
     </div>
+  
   );
 }
 

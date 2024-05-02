@@ -1,0 +1,30 @@
+/* Add this CSS to style your form */
+.Form {
+    margin-top: 20px; /* Add some top margin to separate from the dotted border */
+  }
+  
+  .Form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .Form input {
+    margin-bottom: 10px; /* Add some bottom margin to create space between inputs */
+    padding: 5px; /* Add padding to inputs */
+    width: 200px; /* Set width of inputs */
+  }
+  
+  .Form button {
+    padding: 10px 20px; /* Add padding to button */
+    background-color: #007bff; /* Blue background color */
+    color: #fff; /* White text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Add border radius */
+    cursor: pointer; /* Add pointer cursor */
+  }
+  
+  .Form button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
