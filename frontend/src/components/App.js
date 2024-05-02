@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
-// import Home from "./Home";
 import Nav from "./Nav";
 import Side from "./Side";
+import Project from "./Project";
+import Home from "./Home";
 
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
   }
@@ -13,9 +14,10 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Nav />
-        <Side/>
+        <Home/>
         
+        
+
       </div>
     );
   }

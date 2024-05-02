@@ -1,8 +1,20 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import axios from 'axios';
 import '../../static/css/nav.css';
 
 class Nav extends Component {
+  state = {
+    loggedOut: false
+  };
+
   render() {
+    const user_email = new URLSearchParams(window.location.search).get('user_email');
+  
+    if (this.state.loggedOut) {
+      window.location.href = '/'; 
+    }
+
     return (
       <nav className="nav-container">
         <ul className="nav-list">
@@ -17,7 +29,8 @@ class Nav extends Component {
               <button className="nav-button">Service 3</button>
             </div>
           </li>
-          <li className="nav-item"><button className="nav-button">Contact</button></li>
+          <li className="nav-item"><button className="nav-button" onClick={this.handleLogout}>Logout</button></li>
+          {user_email&& <li className="nav-item"><span className="nav-user">user_email: {user_email}</span></li>}
         </ul>
       </nav>
     );
@@ -26,6 +39,19 @@ class Nav extends Component {
   toggleDropdown = (event) => {
     const parentLi = event.target.parentElement;
     parentLi.classList.toggle('active');
+  }
+
+  handleLogout = () => {
+    // Perform logout actions
+    axios.post('http://localhost:8000/djapp/logout')
+      .then(response => {
+        if (response.status === 200) {
+          this.setState({ loggedOut: true });
+        } else {
+          console.error('Logout failed');
+        }
+      })
+      .catch(error => console.error('Error during logout:', error));
   }
 }
 

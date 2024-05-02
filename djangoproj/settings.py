@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     "djapp.apps.DjappConfig",
     "frontend.apps.FrontendConfig",
     "rest_framework",
+    'rest_framework_simplejwt',
+    'corsheaders',
+    'rest_framework.authtoken',
+    'djoser'
 ]
 AUTH_USER_MODEL="djapp.CustomUser"
 MIDDLEWARE = [
@@ -50,10 +54,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'djangoproj.urls'
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS= True
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    # Add other allowed origins as needed
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -133,3 +144,18 @@ EMAIL_HOST_USER = "kavyasrir365@gmail.com"
 EMAIL_HOST_PASSWORD = 'rzsieneuanllhrpn'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+from datetime import timedelta
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # Other authentication classes
+    ),
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    
+     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+     'ROTATE_REFRESH_TOKENS': True,
+     'BLACKLIST_AFTER_ROTATION': True
+}

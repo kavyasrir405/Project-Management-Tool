@@ -1,17 +1,9 @@
 from rest_framework import serializers
-from .models import room,Email,CustomUser,Project
+from .models import *
 
 
-class roomSerializer(serializers.ModelSerializer ):
 
-    class Meta:
-        model=room
-        fields=('id','code','host','guest_Can_pause','votes_to_skip','created_at')
 
-class CreateRoomSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=room
-        fields=('guest_Can_pause','votes_to_skip')
 
 class EmailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,11 +11,21 @@ class EmailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProjectSerializer(serializers.ModelSerializer):
+    useremail = serializers.EmailField()
+
     class Meta:
         model = Project
-        fields=('projectname',)
+        fields=('projectname','useremail','teamlead_mail')
 
-class LoginUserSerializer (serializers.ModelSerializer):
+
+
+
+class LoginUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields =  ('username', 'email', 'password',  'first_name', 'last_name')
+        # model = CustomUser
+        fields = ('username', 'password')
+
+class EpicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Epic
+        fields = ['name', 'start_date', 'end_date']

@@ -31,12 +31,7 @@ def generate_unique_code():
 
 
 
-class room(models.Model):
-    code=models.CharField(max_length=8, default=generate_unique_code, unique=True)
-    host=models.CharField(max_length=50, unique=True)
-    guest_Can_pause= models.BooleanField(null=False,default=False)
-    votes_to_skip= models.IntegerField(null=False, default=1)
-    created_at= models.DateField(auto_now_add=True)
+
 
 class Email(models.Model):
     recipient = models.EmailField()
@@ -63,6 +58,8 @@ def generate_team_id():
 class Project(models.Model):
     projectid = models.CharField(primary_key=True, max_length=20, default=generate_project_id)
     projectname = models.CharField(max_length=100)
+    teamlead_mail=models.EmailField(default="abc@gmail.com", null=True)
+    
     teamid = models.ForeignKey('Team', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -70,14 +67,15 @@ class Project(models.Model):
     
 class Team(models.Model):
     teamid = models.CharField(primary_key=True, max_length=20, default=generate_team_id)
+    useremail = models.EmailField(default="abc@gmail.com", null=True)
+    
 
     def __str__(self):
         return f'Team - {self.teamid}'
     
-class TeamMember(models.Model):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    useremail = models.EmailField(unique=True)
 
-    def __str__(self):
-        return self.useremail
 
+class Epic(models.Model):
+    name = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField()
