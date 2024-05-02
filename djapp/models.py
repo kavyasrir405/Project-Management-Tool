@@ -79,3 +79,24 @@ class Epic(models.Model):
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
+
+
+class Sprint(models.Model):
+    sprint = models.AutoField(primary_key=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    sprint_goal=models,models.TextField()
+
+class backlog(models.Model):
+    backlogName = models.CharField(max_length=30)
+    backlogId = models.CharField(max_length=20, unique=True)
+    sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def generate_unique_backlog_id(self):
+        unique_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        return f"backlog_{unique_id}"
+
+    def save(self, *args, **kwargs):
+        if not self.backlogId:
+            self.backlogId = self.generate_unique_backlog_id()
+        super().save(*args, **kwargs)

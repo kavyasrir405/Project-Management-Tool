@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../../static/css/login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -18,14 +19,14 @@ const Login = () => {
       console.log('Login successful:', response.data);
       
       // Redirect to home page with user ID as query parameter
-      window.location.href = `/home?user_email=${response.data.user_email}`; 
+      window.location.href = `/project?user=${encodeURIComponent(JSON.stringify(response.data.user))}`; 
     } catch (error) {
       console.error('Login failed:', error.response.data);
     }
   };
 
   return (
-    <div>
+    <div className="login-container"> {/* Apply the CSS class to the container */}
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>

@@ -29,3 +29,22 @@ class EpicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Epic
         fields = ['name', 'start_date', 'end_date']
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'user_id', 'email']
+
+
+
+class BacklogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= backlog
+        fields=  ('backlogName',)  
+class UpdateBacklogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= backlog
+        fields=  ('sprint',)
+class SprintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Sprint
+        fields=  '__all__'

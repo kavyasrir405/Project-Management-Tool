@@ -8,3 +8,7 @@ admin.site.register(Project)
 admin.site.register(Team)
 
 admin.site.register(Epic)
+
+admin.site.register(backlog)
+
+admin.site.register(Sprint)

@@ -6,6 +6,10 @@ urlpatterns = [
     path('join', index),
     path('create', index),
     path('home', index),
+    path('project', index),
+    path('accept', index),
+
+
 
     
       # path('room/<str:roomCode>', index),

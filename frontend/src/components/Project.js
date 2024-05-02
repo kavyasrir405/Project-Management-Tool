@@ -17,7 +17,10 @@ class Project extends Component {
   };
 
   handleSubmit = (event) => {
-    const teamlead_mail = new URLSearchParams(window.location.search).get('user_email');
+
+    const userData = JSON.parse(decodeURIComponent(new URLSearchParams(window.location.search).get('user')));
+    const teamlead_mail = userData.email;
+    
     console.log(teamlead_mail)
     event.preventDefault();
     const { projectname, useremail } = this.state;
@@ -73,3 +76,7 @@ class Project extends Component {
 }
 
 export default Project;
+
+
+
+

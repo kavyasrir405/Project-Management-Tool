@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Month Timeline with D3.js</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .timeline {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        .month {
+            fill: #ccc;
+            stroke: #fff;
+            stroke-width: 1px;
+        }
+        .month-label {
+            fill: black;
+            text-anchor: middle;
+        }
+        .project {
+            fill: #6FCF97; /* Change the color to whatever you prefer */
+        }
+        .project-label {
+            fill: black;
+            text-anchor: end; /* Adjusted the text-anchor */
+            font-weight: bold;
+        }
+        .tooltip {
+            font-size: 12px;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            pointer-events: none; /* Ensure tooltip doesn't block mouse events */
+        }
+    </style>
+</head>
+<body>
+    {% comment %} <div>
+        {{ epics | safe }}
+    </div> {% endcomment %}
+    <svg width="2620" height="2000" class="timeline"></svg>
+    <div class="tooltip" style="display: none;"></div>
+
+    <script>
+        // Constants
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        const monthWidth = 210;
+        const monthHeight = 20;
+        const margin = { top: 20, right: 20, bottom: 20, left: 60 };
+
+        
+        const epics = JSON.parse('{{ epics | safe }}');
+        console.log(epics)
+
+        // SVG setup
+        const svg = d3.select("svg.timeline");
+        const width = +svg.attr("width") - margin.left - margin.right;
+        const height = +svg.attr("height") - margin.top - margin.bottom;
+        const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Draw months
+        g.selectAll(".month")
+            .data(months)
+            .enter().append("rect")
+                .attr("class", "month")
+                .attr("x", (d, i) => i * monthWidth)
+                .attr("y", 0)
+                .attr("width", monthWidth)
+                .attr("height", monthHeight);
+
+        // Draw month labels
+        g.selectAll(".month-label")
+            .data(months)
+            .enter().append("text")
+                .attr("class", "month-label")
+                .attr("x", (d, i) => i * monthWidth + monthWidth / 2)
+                .attr("y", monthHeight / 1.5) 
+                .text(d => d);
+        
+        // Draw epics
+        epics.forEach((epic, index) => {
+            const startDate = new Date(epic.fields.start_date);
+            console.log(epic.fields.name)
+            const endDate = new Date(epic.fields.end_date);
+            const startMonth = startDate.getMonth();
+            const startDay = startDate.getDate(); 
+            const mayIndex = months.indexOf(months[startMonth]); 
+            const labelstart=mayIndex * monthWidth;
+            const projectStart = mayIndex * monthWidth + ((startDay - 1) / 31) * monthWidth; 
+            const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            const projectEnd = projectStart + durationInDays * 7; 
+            g.append("rect")
+                .attr("class", "project")
+                .attr("x", projectStart)
+                .attr("y", 50 + index * (monthHeight + 10))
+                .attr("width", durationInDays * 7)
+                .attr("height", monthHeight)
+                .on("mouseover", function() {
+                    const daysLeft = Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24));
+                    const tooltip = d3.select(".tooltip");
+                    const rectWidth = durationInDays * 7;
+                    const rectX = projectStart;
+                    const rectY = 50 + index * (monthHeight + 10);
+                    const rectMiddleX = rectX + rectWidth /2;
+                    const rectMiddleY = rectY + monthHeight / 3;
+                    tooltip
+                        .text(`Days left: ${daysLeft}`)
+                        .style("display", "block")
+                        .style("left", `${rectMiddleX}px`)
+                        .style("top", `${rectMiddleY}px`);
+                })
+                .on("mouseout", function() {
+                    d3.select(".tooltip").style("display", "none");
+                });
+            g.append("text")
+                .attr("class", "project-label")
+                .attr("x", 0) 
+                .attr("y", 50 + index * (monthHeight + 10) + monthHeight / 1.5)
+                .text(epic.fields.name);
+        });
+
+    </script>
+</body>
+</html>

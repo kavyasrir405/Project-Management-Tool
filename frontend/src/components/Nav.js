@@ -5,14 +5,23 @@ import '../../static/css/nav.css';
 
 class Nav extends Component {
   state = {
-    loggedOut: false
+    loggedOut: false,
+    user: null
   };
 
+  componentDidMount() {
+    // Extract user object from URL query parameter
+    const user = new URLSearchParams(window.location.search).get('user');
+    if (user) {
+      this.setState({ user: JSON.parse(decodeURIComponent(user)) });
+    }
+  }
+
   render() {
-    const user_email = new URLSearchParams(window.location.search).get('user_email');
+    const { loggedOut, user } = this.state;
   
-    if (this.state.loggedOut) {
-      window.location.href = '/'; 
+    if (loggedOut) {
+      return <Redirect to="/" />;
     }
 
     return (
@@ -30,7 +39,15 @@ class Nav extends Component {
             </div>
           </li>
           <li className="nav-item"><button className="nav-button" onClick={this.handleLogout}>Logout</button></li>
-          {user_email&& <li className="nav-item"><span className="nav-user">user_email: {user_email}</span></li>}
+          {user && (
+            <li className="nav-item nav-user">
+              <span>User:{user.username}</span>
+              <span>     &nbsp;&nbsp;</span>
+              <span>email: {user.email} </span>
+              
+              {/* Add other fields here */}
+            </li>
+          )}
         </ul>
       </nav>
     );
