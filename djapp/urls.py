@@ -2,7 +2,7 @@
 from django.urls import include, path
 from .views import *
 
-from rest_framework_simplejwt import views as jwt_views
+
 urlpatterns = [
     
     
@@ -17,8 +17,10 @@ urlpatterns = [
      path('timeline', timeline, name='timeline'),
      path('project_list', ProjectListView.as_view()),
      path('create_issue', ReactViews.as_view()),
-     
+     path('get_issues/', SprintIssues.as_view()),
+     path('update_backlog/', updateBacklog.as_view()),
     path('update_backlog',updateBacklog.as_view()),
+   
 
 
 

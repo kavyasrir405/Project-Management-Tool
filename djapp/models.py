@@ -46,6 +46,7 @@ def generate_project_id():
         code = ''.join(['proj'] + random.choices('0123456789', k=length))
     return code
 
+
 def generate_team_id():
     length = 10
     code = ''.join(['team'] + random.choices('0123456789', k=length))
@@ -63,7 +64,7 @@ class Project(models.Model):
     teamid = models.ForeignKey('Team', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.projectname
+        return self.projectid
     
 class Team(models.Model):
     teamid = models.CharField(primary_key=True, max_length=20, default=generate_team_id)
@@ -82,15 +83,17 @@ class Epic(models.Model):
 
 
 class Sprint(models.Model):
-    sprint = models.AutoField(primary_key=True)
+    sprint = models.CharField(primary_key=True, max_length=20, default=None)
     start_date = models.DateField()
     end_date = models.DateField()
-    sprint_goal=models,models.TextField()
+    sprint_goal=models.TextField(null=True,default="okay")
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
 
 class backlog(models.Model):
     backlogName = models.CharField(max_length=30)
     backlogId = models.CharField(max_length=20, unique=True)
     sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True)
+    projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
 
     def generate_unique_backlog_id(self):
         unique_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))

@@ -39,7 +39,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class BacklogSerializer(serializers.ModelSerializer):
     class Meta:
         model= backlog
-        fields=  ('backlogName',)  
+        fields=  ('backlogName',"projectId")  
 class UpdateBacklogSerializer(serializers.ModelSerializer):
     class Meta:
         model= backlog

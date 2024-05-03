@@ -1,0 +1,25 @@
+.outerdiv {
+    border: dotted;
+    min-height: 100px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5px;
+    margin-left: 100px;
+  }
+  
+  .innerdiv {
+    
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 3px;
+    margin-right: 3px;
+   
+    margin-top: 10px; /* Add margin to the top of inner divs */
+  }
+  .createSprint{
+    float:right;
+    margin-right: 20px;
+  }
+  

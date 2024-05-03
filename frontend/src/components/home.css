@@ -1,0 +1,10 @@
+.nav1-container {
+    position: fixed;
+    
+    right: 30;
+    
+  }
+  
+  .content-container {
+    padding-right: 200px; /* Adjust this value to create space for the right-positioned element */
+  }

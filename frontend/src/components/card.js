@@ -1,31 +1,48 @@
-// Card.jsx
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import './card.css';
 
-import React from 'react';
-import './card.css'
-const Card = (props) => {
- 
-  return (
-    <div>
-      {/* Iterate over each inner array in props.arr */}
-      {props.arr.map((innerArr, index) => {
-        // Check if innerArr is not empty and contains at least one non-empty value
-        if (innerArr.length > 0 && innerArr.some(value => value !== '')) {
-          return (
-            <div key={index} className="sprint">
-              {/* Render innerArr values */}
-              <h3>Sprint {index+1}</h3>
-              {innerArr.map((value, innerIndex) => (
-                // Check if value is not empty before rendering
-                value !== '' && <div key={innerIndex}>{value}</div>
-              ))}
-            </div>
-          );
-        } else {
-          return null; // Skip rendering if innerArr is empty or contains only empty values
+function SprintCards({ sprints }) {
+  const [sprintIssues, setSprintIssues] = useState({});
+
+  useEffect(() => {
+    const fetchIssues = async () => {                         
+      const issuesData = {};
+      try {
+        for (const sprint of sprints) {
+          const response = await axios.get(`http://localhost:8000/djapp/get_issues/?sprint=${sprint.sprint}`);
+          issuesData[sprint.sprint] = response.data;
         }
-      })}
+        setSprintIssues(issuesData);
+      } catch (error) {
+        console.error('Error fetching issues:', error);
+      }
+    };
+
+    fetchIssues();
+  }, [sprints]);
+  
+  return (
+    <div className="sprint-cards-container">
+      {sprints.map((sprint, index) => (
+        <div key={index} className="sprint-card">
+          <div className="sprint-header">
+            <div className="sprint-name">{sprint.sprint}</div>
+            <div className="sprint-dates">
+              {`${sprint.start_date} - ${sprint.end_date}`}
+            </div>
+          </div>
+          <div className="sprint-issues">
+            {sprintIssues[sprint.sprint] && sprintIssues[sprint.sprint].map((issue, idx) => (
+              <div key={idx} className="issue">
+                {issue.backlogName}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
-};
+}
 
-export default Card;
+export default SprintCards;

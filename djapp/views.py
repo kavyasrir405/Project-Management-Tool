@@ -3,6 +3,8 @@ from django.shortcuts import redirect, render
 from rest_framework import generics,status
 from .serializers import *
 from .models import *
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import logout     
@@ -138,30 +140,64 @@ class ProjectListView(View):
 
 class ReactViews(APIView):
     def get(self, request):
+        # Retrieve projectId from query parameters
+        project_id = request.query_params.get('projectId')
+       
+        if project_id:
+            queryset = backlog.objects.filter(projectId=project_id)
+        else:
+            queryset = backlog.objects.all()
+
         # Serialize queryset using serializer
-        queryset = backlog.objects.all()
+        print(queryset)
         serializer = BacklogSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = BacklogSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
+        backlog_name = request.data.get('backlogName')
+        project_id = request.data.get('projectId')
+    
+    
+        project_instance = get_object_or_404(Project, projectid=project_id)
+
+    
+        new_backlog = backlog.objects.create(backlogName=backlog_name, projectId=project_instance)
+
+   
+        serializer = BacklogSerializer(new_backlog)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+class SprintIssues(APIView):
+    def get(self, request):
+        sprint=request.query_params.get('sprint')
+        issues = backlog.objects.filter(sprint=sprint)
+        print("charidhhh")
+        print(issues)
+        serializer = BacklogSerializer(issues, many=True)
+        return Response(serializer.data)
 class updateBacklog(APIView):
     def get(self, request):
-        # Serialize queryset of sprints using serializer
-        queryset = Sprint.objects.all()
-        serializer = SprintSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
+        project_id = request.query_params.get('projectId')
+
+        try:
+            queryset = Sprint.objects.filter(project=project_id)
+            print("mikaaaaa")
+            print(queryset)
+            serializer = SprintSerializer(queryset, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+           
+                
+
     def post(self, request):
         # Deserialize sprint data
         sprint_data = {
-            'sprint':request.data.get('sprint'),
+            'sprint': request.data.get('sprint'),
             'start_date': request.data.get('start_date'),
             'end_date': request.data.get('end_date'),
-            'sprint_goal': request.data.get('sprint_goals')
+            'sprint_goal': request.data.get('sprint_goal'),
+            'project':request.data.get('project')
         }
         
         # Validate sprint data
@@ -179,10 +215,10 @@ class updateBacklog(APIView):
         for issue_name in issue_names:
             try:
                 # Get or create backlog item
-                backlog_item, created = Backlog.objects.get_or_create(backlogName=issue_name)
-                backlog_item.sprint = sprint_instance.sprint
+                backlog_item, created = backlog.objects.get_or_create(backlogName=issue_name)
+                backlog_item.sprint = sprint_instance
                 backlog_item.save()
-            except Backlog.DoesNotExist:
+            except backlog.DoesNotExist:
                 return Response({'error': f"Issue with name '{issue_name}' does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({'message': 'Sprint and Backlog updated successfully'}, status=status.HTTP_200_OK)

@@ -40,10 +40,10 @@ INSTALLED_APPS = [
     "djapp.apps.DjappConfig",
     "frontend.apps.FrontendConfig",
     "rest_framework",
-    'rest_framework_simplejwt',
+    
     'corsheaders',
     'rest_framework.authtoken',
-    'djoser'
+    
 ]
 AUTH_USER_MODEL="djapp.CustomUser"
 MIDDLEWARE = [
@@ -148,14 +148,7 @@ from datetime import timedelta
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
         # Other authentication classes
     ),
-}
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    
-     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-     'ROTATE_REFRESH_TOKENS': True,
-     'BLACKLIST_AFTER_ROTATION': True
 }
