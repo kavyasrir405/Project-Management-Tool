@@ -16,11 +16,21 @@ import {
     ACTIVATION_FAIL,
     GOOGLE_AUTH_SUCCESS,
     GOOGLE_AUTH_FAIL,
-   
+    PROJECT_CREATE_SUCCESS,
+    PROJECT_CREATE_FAIL,
     LOGOUT
  
     
 } from './types';
+
+export const createProject = (projectData) => async (dispatch) => {
+    try {
+        const response = await axios.post('http://localhost:8000/djapp/create/', projectData);
+        dispatch({ type: PROJECT_CREATE_SUCCESS, payload: response.data });
+    } catch (error) {
+        dispatch({ type: PROJECT_CREATE_FAIL, payload: error.message });
+    }
+};
 
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {

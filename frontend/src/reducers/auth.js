@@ -15,7 +15,8 @@ import {
     ACTIVATION_FAIL,
     GOOGLE_AUTH_SUCCESS,
     GOOGLE_AUTH_FAIL,
-    
+    PROJECT_CREATE_SUCCESS,
+    PROJECT_CREATE_FAIL,
     LOGOUT
    
 } from '../actions/types';
@@ -24,7 +25,9 @@ const initialState = {
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
-    user: null
+    user: null,
+    project:null,
+    error:null
 };
 
 export default function(state = initialState, action) {
@@ -109,6 +112,18 @@ export default function(state = initialState, action) {
                     return {
                         ...state
                     }
+            case  PROJECT_CREATE_SUCCESS:
+            return {
+                ...state,
+                project: action.payload,
+                error: null
+            };
+        case  PROJECT_CREATE_FAIL:
+            return {
+                ...state,
+                error: action.payload
+            };
+
         default:
             return state
     }

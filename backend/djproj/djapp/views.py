@@ -16,23 +16,25 @@ def create_project(request):
         # Parse request body as JSON
         data = json.loads(request.body)
         project_name = data.get('projectname')
-        print(project_name)
-        teamlead=data.get('teamlead')
-        print(teamlead)
-        
+        teamlead = data.get('teamlead')
 
-        print(project_name)
         if project_name:
-            project = Project(projectname=project_name,teamlead_email=teamlead)
+            project = Project(projectname=project_name, teamlead_email=teamlead)
             project.save()
-            return JsonResponse({'message': 'Project created successfully', 'projectid': project.projectid}, status=201)
+            
+            # Create a dictionary with all parameters
+            response_data = {
+                'message': 'Project created successfully',
+                'projectid': project.projectid,
+                'projectname': project.projectname,
+                'teamlead_email': project.teamlead_email,
+            }
+            
+            return JsonResponse(response_data, status=201)
         else:
             return JsonResponse({'error': 'Project name is required'}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
-
-
-
 @csrf_exempt
 def csrf_token(request):
    
@@ -91,11 +93,8 @@ def process_invitation_token(request):
         except Project.DoesNotExist:
             return JsonResponse({'error': 'Project not found'}, status=404)
 
-        if Project_TeamMember.objects.filter(team_member_email=email).exists():
+        if Project_TeamMember.objects.filter(team_member_email=email,project=project_ins).exists() or project_ins.teamlead_email == email :
             return JsonResponse({'error': 'Email is already associated with this project'}, status=400)
-        if project_ins.teamlead_email == email:
-            return JsonResponse({'error': 'Email is the team lead of this project'}, status=400)
-
     
         team_member = Project_TeamMember.objects.create(team_member_email=email,project=project_ins)
         
@@ -104,3 +103,35 @@ def process_invitation_token(request):
         return JsonResponse({'message': 'Invitation processed successfully'})
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+from django.http import JsonResponse
+from .models import Project, Project_TeamMember
+
+def project_list(request):
+    if request.method == 'GET':
+        email = request.GET.get('email', None)
+        if email:
+            # Retrieve projects where the email matches the team lead
+            projects_lead = Project.objects.filter(teamlead_email=email)
+
+            # Retrieve projects where the email matches a team member
+            projects_member = Project_TeamMember.objects.filter(team_member_email=email).values('project')  # Retrieve project IDs
+
+            # Combine both lists of projects
+            projects = list(projects_lead) + list(Project.objects.filter(pk__in=projects_member))
+
+            # Create a list of project data including team lead information
+            project_data = [
+                {
+                    'projectid': project.projectid,
+                    'projectname': project.projectname,
+                    'teamlead_email': project.teamlead_email
+                } 
+                for project in projects
+            ]
+
+            return JsonResponse(project_data, safe=False)
+        else:
+            return JsonResponse({'error': 'Email parameter is missing'}, status=400)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
