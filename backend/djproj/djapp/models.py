@@ -90,4 +90,30 @@ def generate_project_id(project_name):
         code = ''.join(random.choices(string.ascii_uppercase, k=4))
 
     return code
+class Sprint(models.Model):
+    sprint = models.CharField(primary_key=True, max_length=20, default=None)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    sprint_goal=models.TextField(null=True,default="okay")
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+class Epic(models.Model):
+    EpicName = models.CharField( max_length=20, default=None)
+    Epic_id = models.CharField(max_length=20, unique=True,primary_key=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+   
+    guide=models.CharField(max_length=30)
+
     
+
+class issue(models.Model):
+    IssueName = models.CharField(max_length=30)
+    IssueId = models.CharField(max_length=20, unique=True)
+    sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True)
+    projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    is_addedTosprint=models.BooleanField(max_length=5)
+    status=models.CharField(max_length=30)
+    assignee=models.CharField(max_length=30)
+    assigned_by=models.CharField(max_length=30)
+    description=models.TextField(max_length=30)
+    assigned_epic=models.ForeignKey(Epic, on_delete=models.SET_NULL, null=True, blank=True)
