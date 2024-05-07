@@ -26,19 +26,14 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login/>} />
             <Route path="/signup" element={<Signup/>} />
-            
             <Route path="/activate/:uid/:token" element={<Activate/>} />
             <Route path="/reset_password" element={<Resetpassword/>} />
-
             <Route path="/password/reset/confirm/:uid/:token" element={<Resetpasswordconfirm/>} />
             <Route path="/project" element={<Project />} />
             <Route path="/project/:projectid" element={<ProjectPage />} />
             <Route path="/accept-invitation" element={<Accept_invitation />} />
             <Route path="/project/:projectid/backlog" element={<Backlog/>} />
             <Route path="/project/:projectid/filters" element={<Filters/>} />
-
-
-
             </Routes>
             </Layout>
         </Router>
