@@ -90,17 +90,36 @@ def process_invitation_token(request):
             project_ins = Project.objects.get(projectid=project_id)
         except Project.DoesNotExist:
             return JsonResponse({'error': 'Project not found'}, status=404)
-
+            
         if Project_TeamMember.objects.filter(team_member_email=email).exists():
             return JsonResponse({'error': 'Email is already associated with this project'}, status=400)
         if project_ins.teamlead_email == email:
-            return JsonResponse({'error': 'Email is the team lead of this project'}, status=400)
-
-    
-        team_member = Project_TeamMember.objects.create(team_member_email=email,project=project_ins)
-        
+            return JsonResponse({'error': 'Email is the team lead of this project'}, status=400)    
+        team_member = Project_TeamMember.objects.create(team_member_email=email,project=project_ins) 
         team_member.save()
 
         return JsonResponse({'message': 'Invitation processed successfully'})
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def get_team_members(request):
+    if request.method == 'GET':
+        # Get projectId from query parameters
+        project_id = request.GET.get('projectid')
+
+        if project_id:
+            # Fetch all team members for the specified project from the database
+            team_members_emails = Project_TeamMember.objects.filter(project__projectid=project_id).values_list('team_member_email', flat=True)
+            
+            # Fetch user details for team members
+            team_members = UserAccount.objects.filter(email__in=team_members_emails).values('email', 'first_name', 'last_name')
+
+            # Convert queryset to list of dictionaries
+            team_members_list = list(team_members)
+
+            return JsonResponse({'team_members': team_members_list})
+        else:
+            return JsonResponse({'error': 'Project ID is required'}, status=400)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
